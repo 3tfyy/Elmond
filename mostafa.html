@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صالون الموند | El Mond Salon 💈</title>
+  <link rel="stylesheet" href="mostafa.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Ambient Glowing Background Elements -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="grid-overlay"></div>
+
+  <div class="container">
+    
+    <!-- STEP 1: LANDING PAGE -->
+    <div id="step-1" class="step-card active">
+      <div class="lang-switch">EN</div>
+      
+      <!-- Bespoke Octagonal Emblem (No Diamond Frame) -->
+      <div class="logo-wrapper">
+        <div class="outer-ring"></div>
+        <div class="emblem-box">
+          <div class="crown-icon">👑</div>
+          <div class="brand-text">الموند</div>
+          <div class="sub-brand">EL MOND</div>
+        </div>
+      </div>
+
+      <h1 class="welcome-heading">مرحباً بكم في صالون الموند</h1>
+      <p class="tagline-text">تجربة حلاقة فاخرة بأعلى معايير الرقي</p>
+
+      <button class="btn-luxury" onclick="goToStep(2)">
+        <span>احجز الان</span>
+        <i class="fas fa-arrow-left"></i>
+      </button>
+
+      <!-- Social Circle Buttons -->
+      <div class="social-links">
+        <a href="#" class="icon-btn tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
+        <a href="#" class="icon-btn instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="tel:01000000000" class="icon-btn phone" title="Call Us"><i class="fas fa-phone"></i></a>
+        <a href="https://wa.me/201000000000" class="icon-btn whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" class="icon-btn facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+      </div>
+
+      <!-- Developer Signature -->
+      <p class="credit-text">Designed & Developed by <strong>Atfy</strong></p>
+    </div>
+
+    <!-- STEP 2: BOOKING FORM -->
+    <div id="step-2" class="step-card">
+      <div class="brand-small">
+        <span class="crown-small">👑</span>
+        <span class="name-small">الموند</span>
+      </div>
+
+      <h2 class="form-title">اختيار الموعد المناسب</h2>
+
+      <form id="bookingForm" onsubmit="handleBooking(event)">
+        <div class="input-group">
+          <input type="text" id="clientName" placeholder="اكتب اسمك بالكامل" required autocomplete="off">
+          <span class="focus-line"></span>
+        </div>
+
+        <div class="input-group">
+          <input type="tel" id="clientPhone" placeholder="اكتب رقم التليفون" required autocomplete="off">
+          <span class="focus-line"></span>
+        </div>
+
+        <div class="input-group select-wrapper">
+          <select id="timeSlot" required>
+            <!-- Slot options generated dynamically via JS -->
+          </select>
+          <span class="focus-line"></span>
+        </div>
+
+        <button type="submit" class="btn-luxury margin-top-20">
+          <span>تأكيد الحجز 📅</span>
+          <i class="fas fa-check-circle"></i>
+        </button>
+      </form>
+
+      <!-- Social Links in Step 2 -->
+      <div class="social-links margin-top-25">
+        <a href="#" class="icon-btn tiktok"><i class="fab fa-tiktok"></i></a>
+        <a href="#" class="icon-btn instagram"><i class="fab fa-instagram"></i></a>
+        <a href="tel:01000000000" class="icon-btn phone"><i class="fas fa-phone"></i></a>
+        <a href="https://wa.me/201000000000" class="icon-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" class="icon-btn facebook"><i class="fab fa-facebook-f"></i></a>
+      </div>
+
+      <button class="btn-back" onclick="goToStep(1)">
+        <i class="fas fa-chevron-right"></i> العودة للرئيسية
+      </button>
+
+      <p class="credit-text margin-top-20">Designed & Developed by <strong>Atfy</strong></p>
+    </div>
+
+  </div>
+
+  <script>
+    // Exact Google Form URL specified
+    const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdgkhoTp0ebqM34W4Q_QC1GQgePPQQJnp3XZDz06zWS6uKrPg/viewform?usp=dialog";
+
+    // Strictly 1-Hour Time Slots from 02:00 PM to 02:00 AM
+    const allSlots = [
+      "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM",
+      "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM",
+      "10:00 PM", "11:00 PM", "12:00 AM", "01:00 AM", "02:00 AM"
+    ];
+
+    function getBookedSlots() {
+      const booked = localStorage.getItem("elmond_booked_slots");
+      return booked ? JSON.parse(booked) : [];
+    }
+
+    function renderSlots() {
+      const selectEl = document.getElementById("timeSlot");
+      const bookedSlots = getBookedSlots();
+      const availableSlots = allSlots.filter(slot => !bookedSlots.includes(slot));
+
+      selectEl.innerHTML = `<option value="" disabled selected hidden>اختر الموعد المتاح اليوم</option>`;
+
+      if (availableSlots.length === 0) {
+        selectEl.innerHTML += `<option value="" disabled>جميع مواعيد اليوم محجوزة بالكامل ❌</option>`;
+      } else {
+        availableSlots.forEach(slot => {
+          selectEl.innerHTML += `<option value="${slot}">${slot}</option>`;
+        });
+      }
+    }
+
+    function goToStep(stepNum) {
+      document.querySelectorAll('.step-card').forEach(card => card.classList.remove('active'));
+      document.getElementById(`step-${stepNum}`).classList.add('active');
+    }
+
+    function handleBooking(e) {
+      e.preventDefault();
+      const name = document.getElementById("clientName").value.trim();
+      const phone = document.getElementById("clientPhone").value.trim();
+      const slot = document.getElementById("timeSlot").value;
+
+      if (!slot) {
+        alert("برجاء اختيار الموعد المناسب");
+        return;
+      }
+
+      // 1. Save chosen slot to eliminate it permanently from available list
+      const booked = getBookedSlots();
+      booked.push(slot);
+      localStorage.setItem("elmond_booked_slots", JSON.stringify(booked));
+
+      // 2. Direct Redirect to the specified Google Form URL
+      window.location.href = GOOGLE_FORM_URL;
+    }
+
+    // Initialize Slots
+    renderSlots();
+  </script>
+</body>
+</html>
